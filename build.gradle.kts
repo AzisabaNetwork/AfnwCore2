@@ -7,6 +7,7 @@ group = "net.azisaba.afnw"
 version = "1.5.0-SNAPSHOT"
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         name = "papermc-repo"
@@ -46,7 +47,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot:1.20.2-R0.1-SNAPSHOT")
     compileOnly("net.azisaba.ballotbox:receiver:1.0.1")
     compileOnly("net.azisaba:ItemStash:1.0.0-SNAPSHOT")
-    compileOnly("net.essentialsx:EssentialsX:2.19.7")
+    compileOnly("net.essentialsx:EssentialsX:2.20.1")
     compileOnly("io.lumine:Mythic-Dist:5.4.0")
 }
 
