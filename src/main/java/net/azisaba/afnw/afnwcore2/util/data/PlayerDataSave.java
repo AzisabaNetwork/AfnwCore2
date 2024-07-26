@@ -24,10 +24,8 @@ public record PlayerDataSave(JavaPlugin plugin, PlayerData playerData) {
     new BukkitRunnable() {
       @Override
       public void run() {
-        Bukkit.getServer().broadcast(Component.text("プレイヤーデータ: セーブ中....", NamedTextColor.YELLOW));
         playerData.savePlayerData();
         playerData.reloadPlayerData();
-        Bukkit.getServer().broadcast(Component.text("プレイヤーデータ: セーブ完了", NamedTextColor.YELLOW));
       }
     }.runTaskTimer(plugin, 0, 20L * setPeriod);
     return playerData;
