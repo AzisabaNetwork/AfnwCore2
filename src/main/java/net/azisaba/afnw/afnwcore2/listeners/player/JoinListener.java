@@ -36,6 +36,13 @@ public record JoinListener(JavaPlugin plugin, PlayerData playerData) implements 
   public void onJoin(PlayerJoinEvent e) {
     Player p = e.getPlayer();
 
+    // 初参加の場合はSuper Afnw Ticketを渡す
+    if (!playerData.getPlayerData().getBoolean("players." + p.getUniqueId() + ".first-join", false)) {
+      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mmgive " + p.getName() + " Super_Afnw_Ticket");
+      playerData.getPlayerData().set("players." + p.getUniqueId() + ".first-join", true);
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, playerData::savePlayerData);
+    }
+
     // プレイヤーがサーバーに参加したらタイトルとログインメッセージを送信する
     sendPlayerTitle(p);
     e.joinMessage(Component.text("* " + p.getName() + "がログインしました").color(NamedTextColor.AQUA));

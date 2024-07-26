@@ -18,6 +18,7 @@ public class TheTAB {
             Object tabAPI = Class.forName("me.neznamy.tab.api.TabAPI").getMethod("getInstance").invoke(null);
             Class.forName("me.neznamy.tab.api.event.EventBus")
                     .getMethod("register", Class.class, Consumer.class)
+                    // TODO: me.neznamy.tab.api.event.EventHandler
                     .invoke(tabAPI, Class.forName("me.neznamy.tab.api.event.plugin.TabLoadEvent"), (Consumer<Object>) (e) -> enable());
             enabled = true;
         } catch (ReflectiveOperationException e) {
