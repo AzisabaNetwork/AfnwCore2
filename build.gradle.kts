@@ -29,6 +29,7 @@ repositories {
         name = "lumine"
         url = uri("https://mvn.lumine.io/repository/maven-public/")
     }
+    maven { url = uri("https://jitpack.io") }
     if (properties["azisabaNmsUsername"] != null && properties["azisabaNmsPassword"] != null) {
         maven {
             name = "azisabaNms"
@@ -36,7 +37,6 @@ repositories {
             url = uri("https://repo.azisaba.net/repository/nms/")
         }
     }
-    mavenLocal()
 }
 
 dependencies {

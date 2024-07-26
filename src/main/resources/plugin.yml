@@ -9,6 +9,7 @@ description: That world, once again.
 depend: [ Essentials, Votifier ]
 softdepend:
   - ItemStash
+  - TAB
 website: https://github.com/AfnwTeam/AfnwCore2
 
 permissions:

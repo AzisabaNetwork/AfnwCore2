@@ -11,6 +11,7 @@ import net.azisaba.afnw.afnwcore2.listeners.block.SaplingBreakCanceller;
 import net.azisaba.afnw.afnwcore2.listeners.entity.WitherSpawn;
 import net.azisaba.afnw.afnwcore2.listeners.other.VoteListener;
 import net.azisaba.afnw.afnwcore2.listeners.player.*;
+import net.azisaba.afnw.afnwcore2.util.TheTAB;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerData;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerDataSave;
 import net.kyori.adventure.text.Component;
@@ -102,6 +103,15 @@ public class AfnwCore2 extends JavaPlugin {
     Objects.requireNonNull(getCommand("safeteleport")).setExecutor(new SafeTeleportCommand());
     getLogger().info("コマンド 設定完了");
 
+    Bukkit.getScheduler().runTask(this, () -> {
+      if (Bukkit.getPluginManager().isPluginEnabled("TAB")) {
+        TheTAB.enable();
+        getLogger().info("TABの連携が有効になりました。");
+      } else {
+        getLogger().info("TABの連携は無効です。");
+      }
+    });
+
     if(getConfig().getBoolean("settings.maintenance-mode-toggle", false)) {
       getServer().setWhitelist(true);
       getLogger().info("正常に起動しました。(メンテナンスモード)");
@@ -113,13 +123,6 @@ public class AfnwCore2 extends JavaPlugin {
         for (Dolphin entity : world.getEntitiesByClass(Dolphin.class)) {
           ((CraftDolphin) entity).getHandle().bO.a(goal -> goal.getClass().getTypeName().equals("net.minecraft.world.entity.animal.EntityDolphin$a"));
         }
-      }
-      for (Player player : Bukkit.getOnlinePlayers()) {
-        boolean pvp = pvpEnabled.contains(player.getUniqueId());
-        player.sendActionBar(
-                Component.text("⚔ PvP: ")
-                        .append(Component.text(pvp ? "有効" : "無効", pvp ? NamedTextColor.RED : NamedTextColor.GREEN))
-        );
       }
     }, 10, 10);
     getLogger().info("正常に起動しました。");
