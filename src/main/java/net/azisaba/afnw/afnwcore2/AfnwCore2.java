@@ -121,7 +121,8 @@ public class AfnwCore2 extends JavaPlugin {
     Bukkit.getScheduler().runTaskTimer(this, () -> {
       for (World world : Bukkit.getWorlds()) {
         for (Dolphin entity : world.getEntitiesByClass(Dolphin.class)) {
-          ((CraftDolphin) entity).getHandle().bO.a(goal -> goal.getClass().getTypeName().equals("net.minecraft.world.entity.animal.EntityDolphin$a"));
+          // Prevent DolphinSwimToTreasureGoal from being triggered
+          ((CraftDolphin) entity).getHandle().goalSelector.removeAllGoals(goal -> goal.getClass().getTypeName().equals("net.minecraft.world.entity.animal.EntityDolphin$a"));
         }
       }
     }, 10, 10);

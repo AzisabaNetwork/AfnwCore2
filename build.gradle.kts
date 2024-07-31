@@ -1,13 +1,13 @@
 plugins {
+    id("io.papermc.paperweight.userdev") version "1.7.1"
     java
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "net.azisaba.afnw"
-version = "1.5.0-SNAPSHOT"
+version = "2.0.0-SNAPSHOT"
 
 repositories {
-    mavenLocal()
     mavenCentral()
     maven {
         name = "papermc-repo"
@@ -43,12 +43,12 @@ dependencies {
 //    implementation("net.blueberrymc:native-util:2.1.0")
     implementation("xyz.acrylicstyle.java-util:common:2.0.0-SNAPSHOT")
     implementation("xyz.acrylicstyle.java-util:expression:2.0.0-SNAPSHOT")
-    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
-    compileOnly("org.spigotmc:spigot:1.20.2-R0.1-SNAPSHOT")
     compileOnly("net.azisaba.ballotbox:receiver:1.0.1")
     compileOnly("net.azisaba:ItemStash:1.0.0-SNAPSHOT")
     compileOnly("net.essentialsx:EssentialsX:2.20.1")
     compileOnly("io.lumine:Mythic-Dist:5.4.0")
+    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.2-R0.1-SNAPSHOT")
 }
 
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))

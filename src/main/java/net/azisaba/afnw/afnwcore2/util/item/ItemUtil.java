@@ -23,7 +23,7 @@ public class ItemUtil {
     }
 
     public static @NotNull String getStringTag(@NotNull ItemStack stack, @NotNull String name) {
-        return CraftItemStack.asNMSCopy(stack).w().l(name);
+        return CraftItemStack.asNMSCopy(stack).getOrCreateTag().getString(name);
     }
 
     @Contract("null -> null")

@@ -32,7 +32,7 @@ AfnwCore2を導入したPaperを起動するには以下のプラグインが `p
 
 ```sh 
 git clone https://github.com/AfnwTeam/AfnwCore2.git
-gradle build
+gradlew reobfJar
 ```
 
 なお、Intellij IDEAを使用している場合はすべてGUI上で使用可能です。
