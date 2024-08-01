@@ -8,19 +8,17 @@ import java.util.UUID;
 import net.azisaba.afnw.afnwcore2.commands.*;
 import net.azisaba.afnw.afnwcore2.listeners.block.CropsBreakCanceller;
 import net.azisaba.afnw.afnwcore2.listeners.block.SaplingBreakCanceller;
+import net.azisaba.afnw.afnwcore2.listeners.entity.DropShardListener;
 import net.azisaba.afnw.afnwcore2.listeners.entity.WitherSpawn;
 import net.azisaba.afnw.afnwcore2.listeners.other.VoteListener;
 import net.azisaba.afnw.afnwcore2.listeners.player.*;
 import net.azisaba.afnw.afnwcore2.util.TheTAB;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerData;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerDataSave;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_20_R2.entity.CraftDolphin;
 import org.bukkit.entity.Dolphin;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -75,6 +73,7 @@ public class AfnwCore2 extends JavaPlugin {
     pluginEvent.registerEvents(new BlessedRandomTeleporterListener(), this);
     /* エンティティリスナー */
     pluginEvent.registerEvents(new WitherSpawn(this), this);
+    pluginEvent.registerEvents(new DropShardListener(), this);
     /* その他 */
     pluginEvent.registerEvents(new VoteListener(this, data), this);
     getLogger().info("Listener 設定完了");
