@@ -15,6 +15,8 @@ import net.azisaba.afnw.afnwcore2.listeners.player.*;
 import net.azisaba.afnw.afnwcore2.util.TheTAB;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerData;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerDataSave;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_20_R2.entity.CraftDolphin;
@@ -125,6 +127,8 @@ public class AfnwCore2 extends JavaPlugin {
         }
       }
     }, 10, 10);
+
+    ((RangedAttribute) Attributes.LUCK).maxValue = Double.MAX_VALUE;
     getLogger().info("正常に起動しました。");
   }
 
