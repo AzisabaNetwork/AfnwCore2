@@ -27,7 +27,7 @@ public record SuperAfnwTicketListener(Plugin plugin) implements Listener {
             player.playSound(e.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1000f, 1.5f);
             Bukkit.getScheduler().runTaskLater(plugin, () -> player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1000f, 1.75f), 3);
             Bukkit.getScheduler().runTaskLater(plugin, () -> player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1000f, 2.0f), 6);
-            for (ItemStack value : player.getInventory().addItem(AfnwCommand.getRandomItem(1)).values()) {
+            for (ItemStack value : player.getInventory().addItem(AfnwCommand.getRandomItem(50, 1)).values()) {
                 ItemUtil.addToStashIfEnabledAsync(plugin, player.getUniqueId(), value);
             }
             player.sendMessage("§d" + e.getPlayer().getName() + "§eが§aSuper Afnw Ticket§eを使用し、アイテムが配布されました！");

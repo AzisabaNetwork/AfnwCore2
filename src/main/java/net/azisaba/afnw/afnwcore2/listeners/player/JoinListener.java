@@ -38,7 +38,6 @@ public record JoinListener(JavaPlugin plugin, PlayerData playerData) implements 
 
     // 初参加の場合はSuper Afnw Ticketを渡す
     if (!playerData.getPlayerData().getBoolean("players." + p.getUniqueId() + ".first-join", false)) {
-      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mmgive " + p.getName() + " Super_Afnw_Ticket");
       playerData.getPlayerData().set("players." + p.getUniqueId() + ".first-join", true);
       Bukkit.getScheduler().runTaskAsynchronously(plugin, playerData::savePlayerData);
     }

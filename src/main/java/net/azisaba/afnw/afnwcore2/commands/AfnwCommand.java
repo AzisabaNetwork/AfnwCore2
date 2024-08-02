@@ -5,12 +5,16 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+
 import net.azisaba.afnw.afnwcore2.util.data.PlayerData;
 import net.azisaba.afnw.afnwcore2.util.item.AfnwScaffold;
 import net.azisaba.afnw.afnwcore2.util.item.AfnwTicket;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -44,10 +48,39 @@ public record AfnwCommand(JavaPlugin plugin, PlayerData playerData) implements C
 
   @Contract("_ -> new")
   public static @NotNull ItemStack getRandomItem(int amount) {
+    return getRandomItem(0, amount);
+  }
+
+  @Contract("_, _ -> new")
+  public static @NotNull ItemStack getRandomItem(int luck, int amount) {
     try {
       SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
       List<Material> itemList = new ArrayList<>(Arrays.asList(Material.values()));
       itemList.removeIf(type -> !isAllowed(type));
+      if (luck > 0) {
+        for (int i = 0; i < luck; i++) {
+          itemList.add(Material.DRIPSTONE_BLOCK);
+          itemList.add(Material.POINTED_DRIPSTONE);
+          itemList.add(Material.LAVA_BUCKET);
+          itemList.add(Material.DIRT);
+          itemList.add(Material.NETHERITE_BLOCK);
+          itemList.add(Material.DIAMOND_BLOCK);
+          itemList.add(Material.GOLD_BLOCK);
+          itemList.add(Material.ELYTRA);
+          itemList.add(Material.END_PORTAL_FRAME);
+          itemList.add(Material.ENDER_PEARL);
+          itemList.add(Material.ENDER_EYE);
+          itemList.add(Material.TRIDENT);
+          itemList.add(Material.ENCHANTED_GOLDEN_APPLE);
+          itemList.add(Material.NETHER_STAR);
+          itemList.add(Material.ANCIENT_DEBRIS);
+          itemList.add(Material.BLAZE_POWDER);
+          itemList.add(Material.SPAWNER);
+          itemList.add(Material.NETHERITE_INGOT);
+          itemList.add(Material.DIAMOND);
+          itemList.add(Material.GOLD_INGOT);
+        }
+      }
       return new ItemStack(itemList.get(random.nextInt(itemList.size() - 1)), amount);
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
@@ -95,7 +128,8 @@ public record AfnwCommand(JavaPlugin plugin, PlayerData playerData) implements C
     int itemSize = config.getInt("vote.item-size", 1);
     int scaffoldSize = config.getInt("vote.scaffold-size", 8);
 
-    ItemStack afnwItem = getRandomItem(itemSize);
+    int luck = (int) Math.ceil(Optional.ofNullable(((Player) sender).getAttribute(Attribute.GENERIC_LUCK)).map(AttributeInstance::getValue).orElse(0.0));
+    ItemStack afnwItem = getRandomItem(luck, itemSize);
 
     inv.removeItem(AfnwTicket.afnwTicket);
     inv.addItem(afnwItem);
