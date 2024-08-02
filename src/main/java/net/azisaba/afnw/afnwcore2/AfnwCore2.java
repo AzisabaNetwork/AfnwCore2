@@ -73,6 +73,7 @@ public class AfnwCore2 extends JavaPlugin {
     pluginEvent.registerEvents(new EnderDragonDisableListener(), this);
     pluginEvent.registerEvents(new PvPListener(this), this);
     pluginEvent.registerEvents(new BlessedRandomTeleporterListener(), this);
+    pluginEvent.registerEvents(new FishingListener(), this);
     /* エンティティリスナー */
     pluginEvent.registerEvents(new WitherSpawn(this), this);
     pluginEvent.registerEvents(new DropShardListener(), this);
