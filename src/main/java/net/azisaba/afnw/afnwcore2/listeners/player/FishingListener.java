@@ -12,13 +12,15 @@ import java.util.Optional;
 public class FishingListener implements Listener {
     @EventHandler
     public void on(PlayerFishEvent e) {
-        double baseChance = 0.01; // 1%
-        double playerLuck = Optional.ofNullable(e.getPlayer().getAttribute(Attribute.GENERIC_LUCK)).map(AttributeInstance::getValue).orElse(0.0);
-        double chance = baseChance + playerLuck * 0.001; // 0.1% per luck level
-        // calculate chance
-        if (Math.random() < chance) {
-            // drop shard
-            e.getPlayer().getInventory().addItem(MythicBukkit.inst().getItemManager().getItemStack("Rare_Lootbox_Shard"));
+        if (e.getCaught() != null) {
+            double baseChance = 0.01; // 1%
+            double playerLuck = Optional.ofNullable(e.getPlayer().getAttribute(Attribute.GENERIC_LUCK)).map(AttributeInstance::getValue).orElse(0.0);
+            double chance = baseChance + playerLuck * 0.001; // 0.1% per luck level
+            // calculate chance
+            if (Math.random() < chance) {
+                // drop shard
+                e.getPlayer().getInventory().addItem(MythicBukkit.inst().getItemManager().getItemStack("Rare_Lootbox_Shard"));
+            }
         }
     }
 }
