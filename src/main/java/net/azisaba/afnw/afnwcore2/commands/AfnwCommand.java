@@ -80,6 +80,7 @@ public record AfnwCommand(JavaPlugin plugin, PlayerData playerData) implements C
           itemList.add(Material.DIAMOND);
           itemList.add(Material.GOLD_INGOT);
           itemList.add(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE);
+          itemList.add(Material.REINFORCED_DEEPSLATE);
         }
       }
       return new ItemStack(itemList.get(random.nextInt(itemList.size() - 1)), amount);
