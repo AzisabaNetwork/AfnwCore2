@@ -78,7 +78,7 @@ public record VoteListener(AfnwCore2 plugin, PlayerData playerData) implements L
                 voteCount++;
                 if (voteCount >= bonusLine) {
                     for (int i = 0; i < 10; i++) {
-                        ItemUtil.addToStashIfEnabled(player.getUniqueId(), ticketItem);
+                        ItemUtil.addToStashIfEnabled(player.getUniqueId(), AfnwTicket.afnwTicket);
                     }
                     ItemUtil.addToStashIfEnabled(player.getUniqueId(), new ItemStack(Material.NETHER_STAR));
                     plugin.getSLF4JLogger().info(player.getName() + " (" + player.getUniqueId() + ")が投票ボーナスを獲得しました。");
