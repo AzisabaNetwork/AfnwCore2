@@ -81,6 +81,7 @@ public record AfnwCommand(JavaPlugin plugin, PlayerData playerData) implements C
           itemList.add(Material.GOLD_INGOT);
           itemList.add(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE);
           itemList.add(Material.REINFORCED_DEEPSLATE);
+          Arrays.stream(Material.values()).filter(m -> m.name().endsWith("_SPAWN_EGG")).forEach(itemList::add);
         }
       }
       return new ItemStack(itemList.get(random.nextInt(itemList.size() - 1)), amount);
