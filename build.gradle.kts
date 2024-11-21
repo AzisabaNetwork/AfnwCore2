@@ -1,7 +1,7 @@
 plugins {
     id("io.papermc.paperweight.userdev") version "1.7.1"
     java
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.3"
 }
 
 group = "net.azisaba.afnw"
@@ -47,11 +47,13 @@ dependencies {
     compileOnly("net.azisaba:ItemStash:1.0.0-SNAPSHOT")
     compileOnly("net.essentialsx:EssentialsX:2.20.1")
     compileOnly("io.lumine:Mythic-Dist:5.4.0")
-    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
-    paperweight.paperDevBundle("1.20.2-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    compileOnly("net.azisaba:TAB-BukkitBridge:3.1.0")
+    compileOnly("org.jetbrains:annotations:26.0.1")
+    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
 }
 
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 
 tasks {
     compileJava {

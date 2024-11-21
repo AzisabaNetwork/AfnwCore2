@@ -19,7 +19,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_20_R2.entity.CraftDolphin;
+import org.bukkit.craftbukkit.entity.CraftDolphin;
 import org.bukkit.entity.Dolphin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -108,7 +108,7 @@ public class AfnwCore2 extends JavaPlugin {
     Bukkit.getScheduler().runTask(this, () -> {
       if (Bukkit.getPluginManager().isPluginEnabled("TAB")) {
         TheTAB.enable();
-        getLogger().info("TABの連携が有効になりました。");
+        getLogger().info("TABの連携が有効です。");
       } else {
         getLogger().info("TABの連携は無効です。");
       }
