@@ -15,6 +15,7 @@ import net.azisaba.afnw.afnwcore2.listeners.player.*;
 import net.azisaba.afnw.afnwcore2.util.TheTAB;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerData;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerDataSave;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import org.bukkit.Bukkit;
@@ -61,7 +62,7 @@ public class AfnwCore2 extends JavaPlugin {
     getLogger().info("Listener 設定中....");
     /* プレイヤーリスナー */
     pluginEvent.registerEvents(new JoinListener(this, data), this);
-    pluginEvent.registerEvents(new QuitListener(), this);
+    pluginEvent.registerEvents(new QuitListener(this), this);
     pluginEvent.registerEvents(new DeathListener(), this);
     pluginEvent.registerEvents(new FirstPlayerJoinListener(this, data), this);
     pluginEvent.registerEvents(new AFKListener(this), this);
@@ -129,7 +130,8 @@ public class AfnwCore2 extends JavaPlugin {
       }
     }, 10, 10);
 
-    ((RangedAttribute) Attributes.LUCK).maxValue = Double.MAX_VALUE;
+    ((RangedAttribute) Objects.requireNonNull(BuiltInRegistries.ATTRIBUTE.get(Attributes.LUCK.unwrap().left().orElseThrow())))
+            .maxValue = Double.MAX_VALUE;
     getLogger().info("正常に起動しました。");
   }
 
