@@ -18,7 +18,7 @@ public class DropShardListener implements Listener {
         }
         Player killer = e.getEntity().getKiller();
         double baseChance = 0.001; // 0.1%
-        double playerLuck = Optional.ofNullable(killer.getAttribute(Attribute.GENERIC_LUCK)).map(AttributeInstance::getValue).orElse(0.0);
+        double playerLuck = Optional.ofNullable(killer.getAttribute(Attribute.LUCK)).map(AttributeInstance::getValue).orElse(0.0);
         double chance = baseChance + playerLuck * 0.0001; // 0.01% per luck level
         // calculate chance
         if (Math.random() < chance) {

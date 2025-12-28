@@ -107,7 +107,7 @@ public class AfnwCore2 extends JavaPlugin {
     getLogger().info("コマンド 設定完了");
 
     Bukkit.getScheduler().runTask(this, () -> {
-      if (Bukkit.getPluginManager().isPluginEnabled("TAB")) {
+      if (Bukkit.getPluginManager().isPluginEnabled("TAB-BukkitBridge")) {
         TheTAB.enable();
         getLogger().info("TABの連携が有効です。");
       } else {
@@ -115,7 +115,7 @@ public class AfnwCore2 extends JavaPlugin {
       }
     });
 
-    if(getConfig().getBoolean("settings.maintenance-mode-toggle", false)) {
+    if (getConfig().getBoolean("settings.maintenance-mode-toggle", false)) {
       getServer().setWhitelist(true);
       getLogger().info("正常に起動しました。(メンテナンスモード)");
       return;
@@ -128,10 +128,16 @@ public class AfnwCore2 extends JavaPlugin {
           ((CraftDolphin) entity).getHandle().goalSelector.removeAllGoals(goal -> goal.getClass().getTypeName().equals("net.minecraft.world.entity.animal.EntityDolphin$a"));
         }
       }
-    }, 10, 10);
+    }, 5, 5);
 
-    ((RangedAttribute) Objects.requireNonNull(BuiltInRegistries.ATTRIBUTE.get(Attributes.LUCK.unwrap().left().orElseThrow())))
-            .maxValue = Double.MAX_VALUE;
+    var optionalAttributeReference = Objects.requireNonNull(BuiltInRegistries.ATTRIBUTE.get(Attributes.LUCK.unwrap().left().orElseThrow()));
+      optionalAttributeReference.ifPresent(attributeReference -> {
+        var optional = attributeReference.unwrap().right();
+        optional.ifPresent(attribute -> {
+          ((RangedAttribute) attribute).maxValue = Double.MAX_VALUE;
+          getLogger().info("Luck attribute max value set to Double.MAX_VALUE");
+        });
+      });
     getLogger().info("正常に起動しました。");
   }
 

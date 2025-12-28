@@ -131,7 +131,7 @@ public record AfnwCommand(JavaPlugin plugin, PlayerData playerData) implements C
     int itemSize = config.getInt("vote.item-size", 1);
     int scaffoldSize = config.getInt("vote.scaffold-size", 8);
 
-    int luck = (int) Math.ceil(Optional.ofNullable(((Player) sender).getAttribute(Attribute.GENERIC_LUCK)).map(AttributeInstance::getValue).orElse(0.0));
+    int luck = (int) Math.ceil(Optional.ofNullable(((Player) sender).getAttribute(Attribute.LUCK)).map(AttributeInstance::getValue).orElse(0.0));
     ItemStack afnwItem = getRandomItem(luck, itemSize);
 
     inv.removeItem(AfnwTicket.afnwTicket);

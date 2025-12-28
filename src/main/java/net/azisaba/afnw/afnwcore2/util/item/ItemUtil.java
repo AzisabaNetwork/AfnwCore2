@@ -34,19 +34,19 @@ public class ItemUtil {
     public static @NotNull String getStringTag(@NotNull ItemStack stack, @NotNull String name) {
         CompoundTag tag = getCustomData(stack);
         if (tag == null) return "";
-        return tag.getString(name);
+        return tag.getString(name).orElse("");
     }
 
     public static @NotNull CompoundTag getCompoundTag(@NotNull ItemStack stack, @NotNull String name) {
         CompoundTag tag = getCustomData(stack);
         if (tag == null) return new CompoundTag();
-        return tag.getCompound(name);
+        return tag.getCompound(name).orElseGet(CompoundTag::new);
     }
 
     @Contract("null -> null")
     public static @Nullable String getMythicType(@Nullable ItemStack stack) {
         if (stack == null) return null;
-        String s = getCompoundTag(stack, "PublicBukkitValues").getString("mythicmobs:type");
+        String s = getCompoundTag(stack, "PublicBukkitValues").getString("mythicmobs:type").orElse("");
         if (s.isBlank()) return null;
         return s;
     }
