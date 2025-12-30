@@ -12,8 +12,9 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+          cache: 'gradle'
       - run: ./gradlew shadowJar
       - run: |
           JAR_FILE=$(ls build/libs/AfnwCore2-*-all.jar | head -n 1)
           echo "Uploading file: ${JAR_FILE}"
-          curl -X PUT --data-binary "@${JAR_FILE}" "https://saba8-deploy.azisaba.dev/deploy?secret={{ secrets.DEPLOYMAN_SECRET_SABA8 }}&token={{ secrets.DEPLOYMAN_TOKEN }}&filename=AfnwCore2.jar"
+          curl -X PUT --data-binary "@${JAR_FILE}" "https://saba8-deploy.azisaba.dev/deploy?secret=${{ secrets.DEPLOYMAN_SECRET_SABA8 }}&token=${{ secrets.DEPLOYMAN_TOKEN }}&filename=AfnwCore2.jar"
