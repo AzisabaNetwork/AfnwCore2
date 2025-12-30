@@ -40,10 +40,6 @@ public record JoinListener(JavaPlugin plugin, PlayerData playerData) implements 
     // 初参加の場合
     if (!playerData.getPlayerData().getBoolean("players." + p.getUniqueId() + ".first-join", false)) {
       playerData.getPlayerData().set("players." + p.getUniqueId() + ".first-join", true);
-      e.getPlayer().getInventory().addItem(AfnwTicket.afnwTicket);
-      e.getPlayer().getInventory().addItem(AfnwTicket.afnwTicket);
-      e.getPlayer().getInventory().addItem(AfnwTicket.afnwTicket);
-      e.getPlayer().getInventory().addItem(AfnwTicket.afnwTicket);
       Bukkit.getScheduler().runTaskAsynchronously(plugin, playerData::savePlayerData);
     }
 
