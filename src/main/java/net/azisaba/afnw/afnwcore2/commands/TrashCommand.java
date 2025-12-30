@@ -1,12 +1,11 @@
 package net.azisaba.afnw.afnwcore2.commands;
 
+import net.azisaba.afnw.afnwcore2.gui.TrashInventory;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -29,19 +28,7 @@ public record TrashCommand(JavaPlugin plugin) implements CommandExecutor {
       return false;
     }
 
-    FileConfiguration config = plugin.getConfig();
-    String trashName = config.getString("trash.name", "ゴミ箱");
-    int trashSize = config.getInt("trash.size", 54);
-    if (trashSize % 9 == 0) {
-      config.set("trash.size", 54);
-    }
-
-    trashGUI(p, trashSize, trashName);
+    p.openInventory(new TrashInventory().getInventory());
     return true;
-  }
-
-  public void trashGUI(Player p, int size, String name) {
-    p.openInventory(
-        Bukkit.createInventory(null, size, Component.text(name, NamedTextColor.DARK_PURPLE)));
   }
 }

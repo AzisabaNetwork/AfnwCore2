@@ -11,18 +11,20 @@
 - [Intellij IDEA Ultimate](https://www.jetbrains.com/idea/)
 - [Java SE Development Kit 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 - Java 17
-- Gradle 7.3
-- Paper 1.17.1 (gh 411)
+- Gradle 8.9
+- Paper 1.20.2
 
 ## 前提プラグイン
 
 AfnwCore2を導入したPaperを起動するには以下のプラグインが `plugins/` に導入されている必要があります。
 
 - [EssentialsX](https://essentialsx.net/downloads.html)
+- Votifier
+- [ItemStash](https://github.com/AzisabaNetwork/ItemStash)
 
 ## 使用API
 
-- [paper-api:1.17.1-R0.1-SNAPSHOT](https://papermc.io/repo/repository/maven-public/)
+- [paper-api:1.20.2-R0.1-SNAPSHOT](https://papermc.io/repo/repository/maven-public/)
   - [JavaDoc](https://papermc.io/repo/repository/maven-public/)
 - [EssentialsX API](https://repo.essentialsx.net/releases/)
 
@@ -30,7 +32,7 @@ AfnwCore2を導入したPaperを起動するには以下のプラグインが `p
 
 ```sh 
 git clone https://github.com/AfnwTeam/AfnwCore2.git
-gradle build
+gradlew reobfJar
 ```
 
 なお、Intellij IDEAを使用している場合はすべてGUI上で使用可能です。

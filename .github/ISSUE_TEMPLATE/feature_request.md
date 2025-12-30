@@ -3,7 +3,7 @@ name: Feature request
 about: 機能のリクエストなどを送信します。
 title: ''
 labels: ✨enhancement
-assignees: m2en
+assignees: acrylic-style
 
 ---
 

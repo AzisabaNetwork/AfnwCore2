@@ -3,7 +3,7 @@ name: Bug report
 about: 不具合を報告するIssueを作成します。
 title: ''
 labels: 👮security
-assignees: m2en
+assignees: acrylic-style
 
 ---
 

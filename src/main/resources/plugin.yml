@@ -6,7 +6,10 @@ prefix: AfnwCore2
 load: STARTUP
 authors: [ merunno, afnwteam ]
 description: That world, once again.
-depend: [ Essentials ]
+depend: [ Essentials, Votifier ]
+softdepend:
+  - ItemStash
+  - TAB-BukkitBridge
 website: https://github.com/AfnwTeam/AfnwCore2
 
 permissions:
@@ -93,3 +96,11 @@ commands:
     aliases:
       - mente
       - debug
+  pvp:
+    description: PvPの可否を設定します。
+  mmgive:
+    permission: afnw.command.mmgive
+  mmgiveeval:
+    permission: afnw.command.mmgiveeval
+  safeteleport:
+    permission: afnw.command.safeteleport

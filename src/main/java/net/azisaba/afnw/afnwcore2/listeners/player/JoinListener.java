@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import net.azisaba.afnw.afnwcore2.AfnwCore2;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerData;
+import net.azisaba.afnw.afnwcore2.util.item.AfnwTicket;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
@@ -35,6 +36,16 @@ public record JoinListener(JavaPlugin plugin, PlayerData playerData) implements 
   @EventHandler(priority = EventPriority.NORMAL)
   public void onJoin(PlayerJoinEvent e) {
     Player p = e.getPlayer();
+
+    // 初参加の場合
+    if (!playerData.getPlayerData().getBoolean("players." + p.getUniqueId() + ".first-join", false)) {
+      playerData.getPlayerData().set("players." + p.getUniqueId() + ".first-join", true);
+      e.getPlayer().getInventory().addItem(AfnwTicket.afnwTicket);
+      e.getPlayer().getInventory().addItem(AfnwTicket.afnwTicket);
+      e.getPlayer().getInventory().addItem(AfnwTicket.afnwTicket);
+      e.getPlayer().getInventory().addItem(AfnwTicket.afnwTicket);
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, playerData::savePlayerData);
+    }
 
     // プレイヤーがサーバーに参加したらタイトルとログインメッセージを送信する
     sendPlayerTitle(p);
@@ -72,7 +83,7 @@ public record JoinListener(JavaPlugin plugin, PlayerData playerData) implements 
   @Deprecated
   public void sendPlayerTitle(@NonNull Player p) {
     // タイトルの表示時間の設定
-    final Title.Times times = Title.Times.of(Duration.ofMillis(500), Duration.ofMillis(3000),
+    final Title.Times times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(3000),
         Duration.ofMillis(1000));
 
     // タイトルの設定

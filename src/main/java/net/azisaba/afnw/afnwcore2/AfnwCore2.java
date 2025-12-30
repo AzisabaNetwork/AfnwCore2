@@ -1,31 +1,34 @@
 package net.azisaba.afnw.afnwcore2;
 
+import java.util.HashSet;
 import java.util.Objects;
-import net.azisaba.afnw.afnwcore2.commands.AfnwCommand;
-import net.azisaba.afnw.afnwcore2.commands.BedCommand;
-import net.azisaba.afnw.afnwcore2.commands.BonusCommand;
-import net.azisaba.afnw.afnwcore2.commands.ConfigReloadCommand;
-import net.azisaba.afnw.afnwcore2.commands.EnderchestCommand;
-import net.azisaba.afnw.afnwcore2.commands.LobbyCommand;
-import net.azisaba.afnw.afnwcore2.commands.MaintenanceCommand;
-import net.azisaba.afnw.afnwcore2.commands.RespawnCommand;
-import net.azisaba.afnw.afnwcore2.commands.TicketCommand;
-import net.azisaba.afnw.afnwcore2.commands.TrashCommand;
-import net.azisaba.afnw.afnwcore2.commands.TutorialCommand;
-import net.azisaba.afnw.afnwcore2.commands.VoidCommand;
-import net.azisaba.afnw.afnwcore2.commands.VoteCommand;
+import java.util.Set;
+import java.util.UUID;
+
+import net.azisaba.afnw.afnwcore2.commands.*;
 import net.azisaba.afnw.afnwcore2.listeners.block.CropsBreakCanceller;
 import net.azisaba.afnw.afnwcore2.listeners.block.SaplingBreakCanceller;
+import net.azisaba.afnw.afnwcore2.listeners.entity.DropShardListener;
 import net.azisaba.afnw.afnwcore2.listeners.entity.WitherSpawn;
 import net.azisaba.afnw.afnwcore2.listeners.other.VoteListener;
 import net.azisaba.afnw.afnwcore2.listeners.player.*;
+import net.azisaba.afnw.afnwcore2.util.TheTAB;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerData;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerDataSave;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.entity.CraftDolphin;
 import org.bukkit.entity.Dolphin;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 /**
  * AfnwCore2 のメインクラス
@@ -34,6 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @see org.bukkit.plugin.java.JavaPlugin
  */
 public class AfnwCore2 extends JavaPlugin {
+  public final Set<UUID> pvpEnabled = new HashSet<>();
 
   @Override
   public void onEnable() {
@@ -41,6 +45,9 @@ public class AfnwCore2 extends JavaPlugin {
 
     // コンフィグのロード
     saveDefaultConfig();
+    if (getConfig().getBoolean("settings.require-item-stash", false) && Bukkit.getPluginManager().getPlugin("ItemStash") == null) {
+      throw new RuntimeException("ItemStashプラグインがインストールされていません。settings > require-item-stashをfalseにするか、ItemStashをインストール、またはエラーを確認してください。");
+    }
     getLogger().info("コンフィグ ロード完了");
 
     // プレイヤーデータのロード
@@ -58,16 +65,25 @@ public class AfnwCore2 extends JavaPlugin {
     getLogger().info("Listener 設定中....");
     /* プレイヤーリスナー */
     pluginEvent.registerEvents(new JoinListener(this, data), this);
-    pluginEvent.registerEvents(new QuitListener(), this);
+    pluginEvent.registerEvents(new QuitListener(this), this);
     pluginEvent.registerEvents(new DeathListener(), this);
     pluginEvent.registerEvents(new FirstPlayerJoinListener(this, data), this);
     pluginEvent.registerEvents(new AFKListener(this), this);
     pluginEvent.registerEvents(new RespawnEnvironment(this), this);
-    pluginEvent.registerEvents(new SuperAfnwTicketListener(), this);
+    pluginEvent.registerEvents(new SuperAfnwTicketListener(this), this);
+    pluginEvent.registerEvents(new VillagerInteractListener(), this);
+    pluginEvent.registerEvents(new VillagerProtectorListener(), this);
+    pluginEvent.registerEvents(new BedListener(this), this);
+    pluginEvent.registerEvents(new EnderDragonDisableListener(), this);
+    pluginEvent.registerEvents(new PvPListener(this), this);
+    pluginEvent.registerEvents(new BlessedRandomTeleporterListener(), this);
+    pluginEvent.registerEvents(new FishingListener(), this);
+    pluginEvent.registerEvents(new TrashListener(this), this);
     /* エンティティリスナー */
     pluginEvent.registerEvents(new WitherSpawn(this), this);
+    pluginEvent.registerEvents(new DropShardListener(), this);
     /* その他 */
-    pluginEvent.registerEvents(new VoteListener(), this);
+    pluginEvent.registerEvents(new VoteListener(this, data), this);
     getLogger().info("Listener 設定完了");
     /* ブロックリスナー */
     pluginEvent.registerEvents(new CropsBreakCanceller(), this);
@@ -88,9 +104,22 @@ public class AfnwCore2 extends JavaPlugin {
     Objects.requireNonNull(getCommand("trash")).setExecutor(new TrashCommand(this));
     Objects.requireNonNull(getCommand("maintenance")).setExecutor(new MaintenanceCommand());
     Objects.requireNonNull(getCommand("bonus")).setExecutor(new BonusCommand(this, data));
+    Objects.requireNonNull(getCommand("pvp")).setExecutor(new PvPCommand(this));
+    Objects.requireNonNull(getCommand("mmgive")).setExecutor(new MMGiveCommand(this));
+    Objects.requireNonNull(getCommand("mmgiveeval")).setExecutor(new MMGiveEvalCommand());
+    Objects.requireNonNull(getCommand("safeteleport")).setExecutor(new SafeTeleportCommand());
     getLogger().info("コマンド 設定完了");
 
-    if(getConfig().getBoolean("settings.maintenance-mode-toggle", false)) {
+    Bukkit.getScheduler().runTask(this, () -> {
+      if (Bukkit.getPluginManager().isPluginEnabled("TAB-BukkitBridge")) {
+        TheTAB.enable();
+        getLogger().info("TABの連携が有効です。");
+      } else {
+        getLogger().info("TABの連携は無効です。");
+      }
+    });
+
+    if (getConfig().getBoolean("settings.maintenance-mode-toggle", false)) {
       getServer().setWhitelist(true);
       getLogger().info("正常に起動しました。(メンテナンスモード)");
       return;
@@ -99,10 +128,28 @@ public class AfnwCore2 extends JavaPlugin {
     Bukkit.getScheduler().runTaskTimer(this, () -> {
       for (World world : Bukkit.getWorlds()) {
         for (Dolphin entity : world.getEntitiesByClass(Dolphin.class)) {
-          entity.remove();
+          // Prevent DolphinSwimToTreasureGoal from being triggered
+          ((CraftDolphin) entity).getHandle().goalSelector.removeAllGoals(goal -> goal.getClass().getTypeName().equals("net.minecraft.world.entity.animal.EntityDolphin$a") ||
+                  goal.getClass().getTypeName().equals("net.minecraft.world.entity.animal.dolphin.Dolphin$DolphinSwimToTreasureGoal"));
         }
       }
-    }, 1, 1);
+      for (Player player : Bukkit.getOnlinePlayers()) {
+        boolean pvp = pvpEnabled.contains(player.getUniqueId());
+        player.sendActionBar(
+                Component.text("⚔ PvP: ")
+                        .append(Component.text(pvp ? "有効" : "無効", pvp ? NamedTextColor.RED : NamedTextColor.GREEN))
+        );
+      }
+    }, 10, 10);
+
+    var optionalAttributeReference = Objects.requireNonNull(BuiltInRegistries.ATTRIBUTE.get(Attributes.LUCK.unwrap().left().orElseThrow()));
+      optionalAttributeReference.ifPresent(attributeReference -> {
+        var optional = attributeReference.unwrap().right();
+        optional.ifPresent(attribute -> {
+          ((RangedAttribute) attribute).maxValue = Double.MAX_VALUE;
+          getLogger().info("Luck attribute max value set to Double.MAX_VALUE");
+        });
+      });
     getLogger().info("正常に起動しました。");
   }
 
@@ -113,5 +160,10 @@ public class AfnwCore2 extends JavaPlugin {
       getLogger().info("正常に終了しました。(メンテナンスモード)");
     }
     getLogger().info("正常に終了しました。");
+  }
+
+  @NotNull
+  public static Logger getPluginLogger() {
+    return getPlugin(AfnwCore2.class).getSLF4JLogger();
   }
 }

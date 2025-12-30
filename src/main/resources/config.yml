@@ -2,51 +2,53 @@
 # AfnwCore2に関するいろんな設定を変更できるファイルです。パーミッションの設定はここでは行えません。
 # 編集した後はサーバーを再起動するか、プラグインを再リロードするか、コマンド "/config_reload" を実行してください。
 # デフォルト値は万が一指定されていないときにAfnwCore2が代入する値です。(World名のConfigではデフォルト値が入ってもワールドが見つからない場合はNullPointerException(例外)としてクラッシュします。)
-
-vote: # 投票周りの設定
-  item-size: 1
+# 投票周りの設定
+vote:
   # /afnwで交換できるアイテムの数を指定してください。int(数)ではない場合はエラーが発生します。デフォルト: 1
-  scaffold-size: 8
+  item-size: 1
   # /afnwで交換時に一緒に配布される足場の数を指定してください。int(数)ではない場合はエラーが発生します。デフォルト: 8
-  send-ticket-size: 1
+  scaffold-size: 8
   # 投票時に受け取れるチケットの数を指定してください。int(数)ではない場合はエラーが発生します。デフォルト: 1
-  bonus-line: 10
+  send-ticket-size: 1
   # 投票ボーナスの回数を指定します。指定された数以上の回数と一致したらチケット10枚とネザースターが配布されます。int(数)ではない場合はエラーが発生します。デフォルト: 10
+  bonus-line: 10
 
 tp:
-  standby: 10
   # TPコマンド(not /tp)を使用した際の待機時間を秒で指定します。int(数)ではない場合はエラーが発生します。デフォルト: 10
-  lobby_world_name: "lobby"
+  standby: 10
   # ロビーワールドの名前を指定します。デフォルト:lobby
-  void_world_name: "afnw"
+  lobby_world_name: "lobby"
   # Voidワールドの名前を指定します。デフォルト:afnw
-  tutorial_world_name: "tutorial"
+  void_world_name: "afnw"
   # チュートリアルワールドの名前を指定します。デフォルト:tutorial
+  tutorial_world_name: "tutorial"
 
 afk:
-  afk_world_name: "afk"
   # AFKポイントとして利用するワールド名を指定します。デフォルト:afk
+  afk_world_name: "afk"
+  # AFKポイントとして利用する座標をそれぞれ指定します。int(数)ではない場合はエラーが発生します。窒息を防ぐため、Y座標のみ一つ足された数値で利用されるので注意してください。
+  # デフォルト値は0です。必ず指定することをおすすめします。
   afk_point_x: 0
   afk_point_y: 0
   afk_point_z: 0
-  # AFKポイントとして利用する座標をそれぞれ指定します。int(数)ではない場合はエラーが発生します。窒息を防ぐため、Y座標のみ一つ足された数値で利用されるので注意してください。
-  # デフォルト値は0です。必ず指定することをおすすめします。
 
 trash:
-  name: "ゴミ箱"
   # ゴミ箱の名前を指定します。"春猫"って指定しちゃダメだよ。デフォルト:ゴミ箱
-  size: 54
+  name: "ゴミ箱"
   # ゴミ箱のスロット数を指定します。int(数)ではない場合はエラーが発生します。デフォルト: 54
   # Spigot(Paper) 、どっちかというとMinecraft自身の仕様で9の倍数である必要があります。9の倍数ではない場合はデフォルト値に変更されます。
+  size: 54
 
 settings:
-  player-save-period: 120
   # プレイヤーデータの自動セーブ間隔を秒で指定します。int(数)ではない場合はエラーが発生します。デフォルト: 120
-  allow-bedrock-player: ['.Meru92a']
+  player-save-period: 120
   # Bedrock Blockerを除外するプレイヤーのMCIDを入力します。必ず先頭には "." を入れ、コンマで区切ってください。
-  allow-wither-spawn: true
+  allow-bedrock-player: ['.Meru92a']
   # ウィザーのスポーン(召喚)を許可するか, booleanで指定します。 true: 許可します。召喚されてもキャンセルしません。 / false: 許可しません。召喚されてもキャンセルします。
-  notification-wither-spawn: true
+  allow-wither-spawn: true
   # ウィザーの召喚通知を行うか, booleanで指定します。true: 通知します / false: 通知しません。
-  maintenance-mode-toggle: false
+  notification-wither-spawn: true
   # メンテナンスモードで起動するか, booleanで指定します。true: 起動します / false: 起動しません。
+  maintenance-mode-toggle: false
+  # ItemStashプラグインが有効ではない場合はクラッシュします。
+  require-item-stash: false

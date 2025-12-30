@@ -5,12 +5,17 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+
 import net.azisaba.afnw.afnwcore2.util.data.PlayerData;
 import net.azisaba.afnw.afnwcore2.util.item.AfnwScaffold;
 import net.azisaba.afnw.afnwcore2.util.item.AfnwTicket;
+import net.azisaba.afnw.afnwcore2.util.item.ItemUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,36 +39,53 @@ public record AfnwCommand(JavaPlugin plugin, PlayerData playerData) implements C
       if (!type.isItem()) {
           return false;
       }
-    switch (type) {
-      case BEDROCK:
-      case STRUCTURE_BLOCK:
-      case STRUCTURE_VOID:
-      case COMMAND_BLOCK:
-      case CHAIN_COMMAND_BLOCK:
-      case COMMAND_BLOCK_MINECART:
-      case REPEATING_COMMAND_BLOCK:
-      case BARRIER:
-      case LIGHT:
-      case JIGSAW:
-      case END_PORTAL:
-      case KNOWLEDGE_BOOK:
-      case DEBUG_STICK:
-      case AIR:
-      case VOID_AIR:
-      case CAVE_AIR:
-      case BUNDLE:
-        return false;
-      default:
-        return true;
-    }
+      return switch (type) {
+          case BEDROCK, STRUCTURE_BLOCK, STRUCTURE_VOID, COMMAND_BLOCK, CHAIN_COMMAND_BLOCK, COMMAND_BLOCK_MINECART,
+                  REPEATING_COMMAND_BLOCK, BARRIER, LIGHT, JIGSAW, END_PORTAL, KNOWLEDGE_BOOK, DEBUG_STICK,
+                  TEST_INSTANCE_BLOCK, TEST_BLOCK,
+                  AIR, VOID_AIR, CAVE_AIR -> false;
+          default -> true;
+      };
   }
 
   @Contract("_ -> new")
   public static @NotNull ItemStack getRandomItem(int amount) {
+    return getRandomItem(0, amount);
+  }
+
+  @Contract("_, _ -> new")
+  public static @NotNull ItemStack getRandomItem(int luck, int amount) {
     try {
       SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
       List<Material> itemList = new ArrayList<>(Arrays.asList(Material.values()));
       itemList.removeIf(type -> !isAllowed(type));
+      if (luck > 0) {
+        for (int i = 0; i < luck; i++) {
+          itemList.add(Material.DRIPSTONE_BLOCK);
+          itemList.add(Material.POINTED_DRIPSTONE);
+          itemList.add(Material.LAVA_BUCKET);
+          itemList.add(Material.DIRT);
+          itemList.add(Material.NETHERITE_BLOCK);
+          itemList.add(Material.DIAMOND_BLOCK);
+          itemList.add(Material.GOLD_BLOCK);
+          itemList.add(Material.ELYTRA);
+          itemList.add(Material.END_PORTAL_FRAME);
+          itemList.add(Material.ENDER_PEARL);
+          itemList.add(Material.ENDER_EYE);
+          itemList.add(Material.TRIDENT);
+          itemList.add(Material.ENCHANTED_GOLDEN_APPLE);
+          itemList.add(Material.NETHER_STAR);
+          itemList.add(Material.ANCIENT_DEBRIS);
+          itemList.add(Material.BLAZE_POWDER);
+          itemList.add(Material.SPAWNER);
+          itemList.add(Material.NETHERITE_INGOT);
+          itemList.add(Material.DIAMOND);
+          itemList.add(Material.GOLD_INGOT);
+          itemList.add(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE);
+          itemList.add(Material.REINFORCED_DEEPSLATE);
+          Arrays.stream(Material.values()).filter(m -> m.name().endsWith("_SPAWN_EGG")).forEach(itemList::add);
+        }
+      }
       return new ItemStack(itemList.get(random.nextInt(itemList.size() - 1)), amount);
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
@@ -111,17 +133,20 @@ public record AfnwCommand(JavaPlugin plugin, PlayerData playerData) implements C
     int itemSize = config.getInt("vote.item-size", 1);
     int scaffoldSize = config.getInt("vote.scaffold-size", 8);
 
-    ItemStack afnwItem = getRandomItem(itemSize);
+    int luck = (int) Math.ceil(Optional.ofNullable(((Player) sender).getAttribute(Attribute.LUCK)).map(AttributeInstance::getValue).orElse(0.0));
+    ItemStack afnwItem = getRandomItem(luck, itemSize);
 
     inv.removeItem(AfnwTicket.afnwTicket);
-    inv.addItem(afnwItem);
+    for (ItemStack value : inv.addItem(afnwItem).values()) {
+      ItemUtil.addToStashIfEnabledAsync(plugin, ((Player) sender).getUniqueId(), value);
+    }
     for (int i = 0; i < scaffoldSize; i++) {
       inv.addItem(AfnwScaffold.afnwScaffold);
     }
 
     sender.sendMessage(Component.text("アイテムと交換しました。").color(NamedTextColor.GOLD));
     sender.sendMessage(Component.text(
-            "交換内容: " + afnwItem.getType() + " ×" + afnwItem.getAmount() + ", 足場ブロック ×" + scaffoldSize)
+            "交換内容: " + afnwItem.getType() + " ×" + itemSize + "、足場ブロック ×" + scaffoldSize)
         .color(NamedTextColor.GOLD));
     return true;
   }

@@ -54,7 +54,9 @@ public record FirstPlayerJoinListener(JavaPlugin plugin, PlayerData playerData) 
     playerData.savePlayerData();
 
     // テレポートとプレイヤーデータ作成通知
-    p.teleport(tutorial.getSpawnLocation());
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      p.teleport(tutorial.getSpawnLocation());
+    }, 5);
     p.sendMessage(Component.text("プレイヤーデータが作成されました。", NamedTextColor.YELLOW));
   }
 }
