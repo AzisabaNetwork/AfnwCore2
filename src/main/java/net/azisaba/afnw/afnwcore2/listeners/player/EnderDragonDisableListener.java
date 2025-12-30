@@ -12,7 +12,7 @@ public class EnderDragonDisableListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent e) {
         if (e.getItem() == null) return;
         Material inHand = e.getItem().getType();
-        if ((inHand == Material.ENDER_DRAGON_SPAWN_EGG/* || inHand == Material.WITHER_SPAWN_EGG*/)
+        if ((inHand == Material.ENDER_DRAGON_SPAWN_EGG || inHand == Material.WITHER_SPAWN_EGG)
                 && !e.getPlayer().getWorld().getName().equals("afnw_the_end")) {
             e.setCancelled(true);
         }

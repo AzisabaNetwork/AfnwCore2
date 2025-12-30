@@ -15,6 +15,8 @@ import net.azisaba.afnw.afnwcore2.listeners.player.*;
 import net.azisaba.afnw.afnwcore2.util.TheTAB;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerData;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerDataSave;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
@@ -22,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.entity.CraftDolphin;
 import org.bukkit.entity.Dolphin;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -75,6 +78,7 @@ public class AfnwCore2 extends JavaPlugin {
     pluginEvent.registerEvents(new PvPListener(this), this);
     pluginEvent.registerEvents(new BlessedRandomTeleporterListener(), this);
     pluginEvent.registerEvents(new FishingListener(), this);
+    pluginEvent.registerEvents(new TrashListener(this), this);
     /* エンティティリスナー */
     pluginEvent.registerEvents(new WitherSpawn(this), this);
     pluginEvent.registerEvents(new DropShardListener(), this);
@@ -125,10 +129,18 @@ public class AfnwCore2 extends JavaPlugin {
       for (World world : Bukkit.getWorlds()) {
         for (Dolphin entity : world.getEntitiesByClass(Dolphin.class)) {
           // Prevent DolphinSwimToTreasureGoal from being triggered
-          ((CraftDolphin) entity).getHandle().goalSelector.removeAllGoals(goal -> goal.getClass().getTypeName().equals("net.minecraft.world.entity.animal.EntityDolphin$a"));
+          ((CraftDolphin) entity).getHandle().goalSelector.removeAllGoals(goal -> goal.getClass().getTypeName().equals("net.minecraft.world.entity.animal.EntityDolphin$a") ||
+                  goal.getClass().getTypeName().equals("net.minecraft.world.entity.animal.dolphin.Dolphin$DolphinSwimToTreasureGoal"));
         }
       }
-    }, 5, 5);
+      for (Player player : Bukkit.getOnlinePlayers()) {
+        boolean pvp = pvpEnabled.contains(player.getUniqueId());
+        player.sendActionBar(
+                Component.text("⚔ PvP: ")
+                        .append(Component.text(pvp ? "有効" : "無効", pvp ? NamedTextColor.RED : NamedTextColor.GREEN))
+        );
+      }
+    }, 10, 10);
 
     var optionalAttributeReference = Objects.requireNonNull(BuiltInRegistries.ATTRIBUTE.get(Attributes.LUCK.unwrap().left().orElseThrow()));
       optionalAttributeReference.ifPresent(attributeReference -> {

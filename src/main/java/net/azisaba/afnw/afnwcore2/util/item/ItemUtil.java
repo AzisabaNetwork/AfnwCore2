@@ -7,11 +7,15 @@ import net.minecraft.world.item.component.CustomData;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ItemUtil {
@@ -49,5 +53,20 @@ public class ItemUtil {
         String s = getCompoundTag(stack, "PublicBukkitValues").getString("mythicmobs:type").orElse("");
         if (s.isBlank()) return null;
         return s;
+    }
+
+    public static @NotNull String toString(@NotNull ItemStack stack) {
+        List<String> props = new ArrayList<>();
+        props.add("[Type: " + stack.getType().name() + "]");
+        props.add("[Amount: " + stack.getAmount() + "]");
+        ItemMeta meta = stack.getItemMeta();
+        if (meta != null) {
+            if (meta.hasDisplayName()) props.add("[Name: " + meta.getDisplayName() + "]");
+            if (meta.hasLore()) props.add("[Lore: " + Objects.requireNonNull(meta.getLore()).size() + " entries]");
+            if (meta.hasCustomModelData()) props.add("[CustomModelData: " + meta.getCustomModelData() + "]");
+            if (getMythicType(stack) != null) props.add("[MMID: " + getMythicType(stack) + "]");
+            if (meta.hasEnchants()) meta.getEnchants().forEach((enchant, level) -> props.add("[Enchant: " + enchant.getKey() + " " + level + "]"));
+        }
+        return String.join("", props);
     }
 }

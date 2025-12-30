@@ -16,10 +16,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public record VoteListener(AfnwCore2 plugin, PlayerData playerData) implements Listener {
     @EventHandler
     public void onVote(VotifierEvent e) {
+        handleVote(e);
+        handleVote(e);
+    }
+
+    public void handleVote(VotifierEvent e) {
         FileConfiguration config = plugin.getConfig();
         int ticketSize = config.getInt("vote.send-ticket-size", 1);
         int bonusLine = config.getInt("vote.bonus-line", 9);
@@ -50,7 +56,11 @@ public record VoteListener(AfnwCore2 plugin, PlayerData playerData) implements L
                         ItemUtil.addToStashIfEnabledAsync(plugin, sendTarget.getUniqueId(), value);
                     }
                 }
-                for (ItemStack value : inv.addItem(new ItemStack(Material.NETHER_STAR)).values()) {
+                ItemStack netherStar = new ItemStack(Material.NETHER_STAR);
+                ItemMeta meta = netherStar.getItemMeta();
+                meta.displayName(Component.text("投票ボーナス", NamedTextColor.YELLOW));
+                netherStar.setItemMeta(meta);
+                for (ItemStack value : inv.addItem(netherStar).values()) {
                     ItemUtil.addToStashIfEnabledAsync(plugin, sendTarget.getUniqueId(), value);
                 }
                 sendTarget.sendMessage(Component.text("* 投票ボーナスとしてチケット10枚とネザースターを獲得しました。")

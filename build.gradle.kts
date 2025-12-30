@@ -1,11 +1,11 @@
 plugins {
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.19"
     java
-    id("com.gradleup.shadow") version "8.3.3"
+    id("com.gradleup.shadow") version "9.3.0"
 }
 
 group = "net.azisaba.afnw"
-version = "2.0.0-SNAPSHOT"
+version = "2.1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()

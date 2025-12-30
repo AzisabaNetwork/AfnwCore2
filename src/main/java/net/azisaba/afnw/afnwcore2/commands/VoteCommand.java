@@ -37,8 +37,6 @@ public class VoteCommand implements CommandExecutor {
         ChatColor.GOLD +
             """
                 投票よろしくお願いします!
-                ・monocraft
-                https://monocraft.net/servers/xWBVrf1nqB2P0LxlMm2v
                 ・JMS
                 https://minecraft.jp/servers/azisaba.net
                 """

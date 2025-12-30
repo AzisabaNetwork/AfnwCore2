@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import net.azisaba.afnw.afnwcore2.AfnwCore2;
 import net.azisaba.afnw.afnwcore2.util.data.PlayerData;
+import net.azisaba.afnw.afnwcore2.util.item.AfnwTicket;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
@@ -36,9 +37,13 @@ public record JoinListener(JavaPlugin plugin, PlayerData playerData) implements 
   public void onJoin(PlayerJoinEvent e) {
     Player p = e.getPlayer();
 
-    // 初参加の場合はSuper Afnw Ticketを渡す
+    // 初参加の場合
     if (!playerData.getPlayerData().getBoolean("players." + p.getUniqueId() + ".first-join", false)) {
       playerData.getPlayerData().set("players." + p.getUniqueId() + ".first-join", true);
+      e.getPlayer().getInventory().addItem(AfnwTicket.afnwTicket);
+      e.getPlayer().getInventory().addItem(AfnwTicket.afnwTicket);
+      e.getPlayer().getInventory().addItem(AfnwTicket.afnwTicket);
+      e.getPlayer().getInventory().addItem(AfnwTicket.afnwTicket);
       Bukkit.getScheduler().runTaskAsynchronously(plugin, playerData::savePlayerData);
     }
 
