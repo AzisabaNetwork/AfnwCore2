@@ -90,7 +90,11 @@ public record VoteListener(AfnwCore2 plugin, PlayerData playerData) implements L
                     for (int i = 0; i < 10; i++) {
                         ItemUtil.addToStashIfEnabled(player.getUniqueId(), AfnwTicket.afnwTicket);
                     }
-                    ItemUtil.addToStashIfEnabled(player.getUniqueId(), new ItemStack(Material.NETHER_STAR));
+                    ItemStack netherStar = new ItemStack(Material.NETHER_STAR);
+                    ItemMeta meta = netherStar.getItemMeta();
+                    meta.displayName(Component.text("投票ボーナス", NamedTextColor.YELLOW));
+                    netherStar.setItemMeta(meta);
+                    ItemUtil.addToStashIfEnabled(player.getUniqueId(), netherStar);
                     plugin.getSLF4JLogger().info(player.getName() + " (" + player.getUniqueId() + ")が投票ボーナスを獲得しました。");
                     voteCount = 0;
                 }
